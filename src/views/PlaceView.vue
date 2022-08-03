@@ -3,13 +3,14 @@ import axios from "axios";
 export default {
   data: function () {
     return {
-      message: "Welcome to a hacked Vue.js!",
+      message: "Welcome to homework Vue.js style!",
       yoda: "Do or do not; there is no try!",
-      count: 0,
       places: [],
       newPlaceParams: {},
       currentPlace: {},
       editPlaceParams: {},
+      showErrorMessage: false,
+      errorMessage: "",
     };
   },
   created: function () {
@@ -39,16 +40,24 @@ export default {
       document.querySelector("#place-description").showModal();
     },
     updatePlace: function (place) {
-      axios.patch("places/" + place.id, this.editPlaceParams).then((response) => {
-        console.log("Place Updated!", response.data);
-      });
+      axios
+        .patch("places/" + place.id, this.editPlaceParams)
+        .then((response) => {
+          console.log("Place Updated!", response.data);
+        })
+        .catch((error) => (this.errorMessage = error))
+        .then((this.showErrorMessage = true));
     },
     destroyPlace: function (place) {
-      axios.delete("places/" + place.id).then((response) => {
-        console.log("Place Destroyed!", response.data);
-        var index = this.places.indexOf(place);
-        this.places.splice(index, 1);
-      });
+      axios
+        .delete("places/" + place.id)
+        .then((response) => {
+          console.log("Place Destroyed!", response.data);
+          var index = this.places.indexOf(place);
+          this.places.splice(index, 1);
+        })
+        .catch((error) => (this.errorMessage = error))
+        .then((this.showErrorMessage = true));
     },
   },
 };
@@ -61,61 +70,33 @@ export default {
     <div>
       Name:
       <input type="text" v-model="newPlaceParams.name" />
-      Description:
-      <input type="text" v-model="newPlaceParams.description" />
-      Price:
-      <input type="text" v-model="newPlaceParams.price" />
-      Image_url:
-      <input type="text" v-model="newPlaceParams.image_url" />
+      Address:
+      <input type="text" v-model="newPlaceParams.address" />
       <button v-on:click="createPlace()">Create</button>
     </div>
     <div v-for="place in places" v-bind:key="place.id">
-      <h4>{{ place.name }}:</h4>
-      <p>${{ place.price }}</p>
-      <p><img :src="place.image_url" /></p>
+      <h4>{{ place.name }}</h4>
+      <p>{{ place.address }}</p>
       <button v-on:click="showPlace(place)">more info!</button>
     </div>
 
     <dialog id="place-description">
       <form method="dialog">
-        <!-- <h1>{{ currentPlace.name }} - information:</h1>
-        <p>Description: {{ currentPlace.description }}</p>
-        <p>Price: ${{ currentPlace.price }}</p> -->
-
         <h1>Edit Place</h1>
         <p>
           Place Name:
           <input type="text" v-model="editPlaceParams.name" />
         </p>
         <p>
-          Price:
-          <input type="text" v-model="editPlaceParams.price" />
-        </p>
-        <p>
-          Description:
-          <input type="text" v-model="editPlaceParams.description" />
-        </p>
-        <p>
-          Image URL:
-          <input type="text" v-model="editPlaceParams.image_url" />
+          Address:
+          <input type="text" v-model="editPlaceParams.address" />
         </p>
         <button>Close</button>
         <button v-on:click="updatePlace(currentPlace)">Update</button>
         <button v-on:click="destroyPlace(currentPlace)">Delete</button>
       </form>
     </dialog>
-
-    <button @click="count++">Add 1</button>
-    <h2>
-      Count is:
-      <count>{{ count }}!</count>
-    </h2>
   </div>
 </template>
 
-<style>
-count {
-  color: green;
-  font-style: italic;
-}
-</style>
+<style></style>

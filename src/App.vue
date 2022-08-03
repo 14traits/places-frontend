@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">Mini Capstone</a>
+      <a class="navbar-brand" href="#">Places HW</a>
       <button
         class="navbar-toggler"
         type="button"
